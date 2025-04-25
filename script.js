@@ -30,21 +30,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const cardNumberInput = document.createElement("input");
     cardNumberInput.type = "text";
+    cardNumberInput.maxLength = 16;
     cardNumberInput.placeholder = "1234 5678 9012 3456";
     cardForm.appendChild(cardNumberInput);
 
     const cardHolderInput = document.createElement("input");
     cardHolderInput.type = "text";
-    cardHolderInput.placeholder = "Иванов Иван Иванович";
+    cardHolderInput.placeholder = "ivanov ivan ivanovich";
     cardForm.appendChild(cardHolderInput);
 
     const cardExpiryInput = document.createElement("input");
     cardExpiryInput.type = "text";
+    cardExpiryInput.maxLength = 5;
     cardExpiryInput.placeholder = "MM/YY";
     cardForm.appendChild(cardExpiryInput);
 
     const cardCVCInput = document.createElement("input");
     cardCVCInput.type = "text";
+    cardCVCInput.maxLength = 3;
     cardCVCInput.placeholder = "123";
     cardForm.appendChild(cardCVCInput);
 
@@ -85,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mcCardHolder = document.createElement("div");
     mcCardHolder.id = "mcCardHolder";
-    mcCardHolder.textContent = "Иванорв Иван Иванович";
+    mcCardHolder.textContent = "ivanov ivan ivanovich";
     miniCard.appendChild(mcCardHolder);
 
     const mcCardExpiry = document.createElement("div");
@@ -102,24 +105,47 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
+
     bankNameInput.addEventListener("input", function () {
         mcBankName.textContent = bankNameInput.value.length > 0 ? bankNameInput.value : "Банк";
     });
     cardTypesSelect.addEventListener("change", function () {
         mcCardType.textContent = cardTypesSelect.value;
     });
+
+
     cardNumberInput.addEventListener("input", function () {
-        const value = cardNumberInput.value.replace(/\s/g, "").replace(/(\d{4})(?=\d)/g, "$1 ");
+
+        if (!cardNumberInput.value.match(/^\d+$/)) {
+            cardNumberInput.value = cardNumberInput.value.slice(0, -1);
+        }
+        
+        const value = cardNumberInput.value.toString().replace(/\s/g, "").replace(/(\d{4})(?=\d)/g, "$1 ");
         mcCardNumber.textContent = value.length > 0 ? value : "**** **** **** ****";
     });
+
+
     cardHolderInput.addEventListener("input", function () {
-        mcCardHolder.textContent = cardHolderInput.value.length > 0 ? cardHolderInput.value : "Иванов Иван Иванович";
+        if (!cardHolderInput.value.match(/^[a-zA-Z\s]+$/)) {
+            cardHolderInput.value = cardHolderInput.value.slice(0, -1);
+        }
+        mcCardHolder.textContent = cardHolderInput.value.length > 0 ? cardHolderInput.value : "Ivanov Ivan Ivanovich";
     });
+
+
     cardExpiryInput.addEventListener("input", function () {
+        if (!cardExpiryInput.value.match(/^\d+$/)) {
+            cardExpiryInput.value = cardExpiryInput.value.slice(0, -1);
+        }
         const value = cardExpiryInput.value.replace(/\D/g, "").replace(/(\d{2})(\d)/, "$1/$2");
         mcCardExpiry.textContent = value.length > 0 ? value : "**/**";
     });
+
+
     cardCVCInput.addEventListener("input", function () {
+        if (!cardCVCInput.value.match(/^\d+$/)) {
+            cardCVCInput.value = cardCVCInput.value.slice(0, -1);
+        }
         const value = cardCVCInput.value.replace(/\D/g, "");
         mcCardCVC.textContent = value.length > 0 ? value : "***";
     });
