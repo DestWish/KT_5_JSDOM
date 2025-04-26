@@ -21,14 +21,36 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-    const cardTypesSelect = document.createElement("select");
-    const cardTypes = ["Visa", "MasterCard", "Мир"];
-    cardTypes.forEach((type) => {
-        const option = document.createElement("option");
-        option.value = type;
-        option.textContent = type;
+    const cardTypes = {
+        "Visa" : "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcR_FrTaaaGEk9eULQpb355SxtAFizG5jleBqp_1q8j2dgMxqfHT",
+        "MasterCard" : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Mastercard_2019_logo.svg/2560px-Mastercard_2019_logo.svg.png",
+        "Мир" : "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Mir-logo.SVG.svg/2560px-Mir-logo.SVG.svg.png"
+    }
+    const cardTypesSelect = document.createElement("div");
+
+    const cardSelectedType = document.createElement("img");
+    cardSelectedType.src = Object.values(cardTypes)[0];
+    cardSelectedType.alt = Object.keys(cardTypes)[0];
+    cardSelectedType.style.width = "30px";
+    cardTypesSelect.appendChild(cardSelectedType);
+
+
+
+    for ( const [name, path] of Object.entries(cardTypes) ) {
+        const option = document.createElement("img");
+        option.src = path;
+        option.alt = name;
+        option.style.width = "30px";
+        option.addEventListener("click", function () {
+            cardSelectedType.src = option.src;
+            cardSelectedType.alt = option.alt;
+            mcCardType.src = option.src;
+            mcCardType.alt = option.alt;
+        });
+        option.style.cursor = "pointer";
         cardTypesSelect.appendChild(option);
-    });
+    };
+
     cardForm.appendChild(cardTypesSelect);
 
 
@@ -107,9 +129,11 @@ document.addEventListener("DOMContentLoaded", function () {
     mcBankName.textContent = "Банк";
     miniCard.appendChild(mcBankName);
 
-    const mcCardType = document.createElement("div");
+    const mcCardType = document.createElement("img");
     mcCardType.id = "mcCardType";
-    mcCardType.textContent = "Тип карты";
+    mcCardType.src = Object.values(cardTypes)[0];
+    mcCardType.alt = Object.keys(cardTypes)[0];
+    mcCardType.style.width = "30px";
     miniCard.appendChild(mcCardType);
 
     const mcCardNumber = document.createElement("div");
@@ -148,10 +172,9 @@ document.addEventListener("DOMContentLoaded", function () {
     bankNameInput.addEventListener("input", function () {
         mcBankName.textContent = bankNameInput.value.length > 0 ? bankNameInput.value : "Банк";
     });
-    cardTypesSelect.addEventListener("change", function () {
-        mcCardType.textContent = cardTypesSelect.value;
-    });
 
+            
+        
 
     cardNumberInput.addEventListener("input", function () {
 
@@ -215,10 +238,10 @@ cardExpiryYearInput.addEventListener("input", function () {
         event.preventDefault();
 
         const bankName = bankNameInput.value;
-        const cardType = cardTypesSelect.value;
+        const cardType = cardSelectedType.alt;
         const cardNumber = cardNumberInput.value.replace(/\s/g, "");
         const cardHolder = cardHolderInput.value;
-        const cardExpiry = cardExpiryInput.value;
+        const cardExpiry = cardExpiryMonthInput.value + "/" + cardExpiryYearInput.value;
         const cardCVC = cardCVCInput.value;
 
 
@@ -235,7 +258,8 @@ cardExpiryYearInput.addEventListener("input", function () {
         cardTypesSelect.value = cardTypes[0];
         cardNumberInput.value = "";
         cardHolderInput.value = "";
-        cardExpiryInput.value = "";
+        cardExpiryMonthInput.value = "";
+        cardExpiryYearInput.value = "";
         cardCVCInput.value = "";
 
     });
