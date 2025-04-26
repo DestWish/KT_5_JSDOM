@@ -13,10 +13,13 @@ document.addEventListener("DOMContentLoaded", function () {
     cardForm.style.borderRadius = "5px";
 
 
+
     const bankNameInput = document.createElement("input");
     bankNameInput.type = "text";
     bankNameInput.placeholder = "Сбербанк";
     cardForm.appendChild(bankNameInput);
+
+
 
     const cardTypesSelect = document.createElement("select");
     const cardTypes = ["Visa", "MasterCard", "Мир"];
@@ -28,22 +31,46 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     cardForm.appendChild(cardTypesSelect);
 
+
+
     const cardNumberInput = document.createElement("input");
     cardNumberInput.type = "text";
     cardNumberInput.maxLength = 16;
     cardNumberInput.placeholder = "1234 5678 9012 3456";
     cardForm.appendChild(cardNumberInput);
 
+
+
     const cardHolderInput = document.createElement("input");
     cardHolderInput.type = "text";
     cardHolderInput.placeholder = "ivanov ivan ivanovich";
     cardForm.appendChild(cardHolderInput);
 
-    const cardExpiryInput = document.createElement("input");
-    cardExpiryInput.type = "text";
-    cardExpiryInput.maxLength = 5;
-    cardExpiryInput.placeholder = "MM/YY";
-    cardForm.appendChild(cardExpiryInput);
+
+
+    const cardExpiryContainerInput = document.createElement("div");
+
+    const cardExpiryMonthInput = document.createElement("input");
+    cardExpiryMonthInput.type = "text";
+    cardExpiryMonthInput.maxLength = 2;
+    cardExpiryMonthInput.placeholder = "MM";
+    cardExpiryMonthInput.style.width = "20px";
+    cardExpiryContainerInput.appendChild(cardExpiryMonthInput);
+    
+    const slash = document.createElement("span");
+    slash.textContent = "/";
+    cardExpiryContainerInput.appendChild(slash);
+
+    const cardExpiryYearInput = document.createElement("input");
+    cardExpiryYearInput.type = "text";
+    cardExpiryYearInput.maxLength = 2;
+    cardExpiryYearInput.placeholder = "YY";
+    cardExpiryYearInput.style.width = "20px";
+    cardExpiryContainerInput.appendChild(cardExpiryYearInput);
+
+    cardForm.appendChild(cardExpiryContainerInput);
+
+
 
     const cardCVCInput = document.createElement("input");
     cardCVCInput.type = "text";
@@ -51,13 +78,17 @@ document.addEventListener("DOMContentLoaded", function () {
     cardCVCInput.placeholder = "123";
     cardForm.appendChild(cardCVCInput);
 
+
+
     const submitButton = document.createElement("button");
     submitButton.type = "submit";
     submitButton.textContent = "сохранить";
     cardForm.appendChild(submitButton);
 
+
     document.body.appendChild(cardForm);
 
+    
 
     const miniCard = document.createElement("div");
     miniCard.style.backgroundColor = "rgba(255, 132, 0, 0.1)";
@@ -93,7 +124,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const mcCardExpiry = document.createElement("div");
     mcCardExpiry.id = "mcCardExpiry";
-    mcCardExpiry.textContent = "**/**";
+    const expiryMM = document.createElement("span");
+    expiryMM.textContent = "**";
+    mcCardExpiry.appendChild(expiryMM);
+    const expirySlash = document.createElement("span");
+    expirySlash.textContent = "/";
+    mcCardExpiry.appendChild(expirySlash);
+    const expiryYY = document.createElement("span");
+    expiryYY.textContent = "**";
+    mcCardExpiry.appendChild(expiryYY);
     miniCard.appendChild(mcCardExpiry);
 
     const mcCardCVC = document.createElement("div");
@@ -133,13 +172,20 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 
-    cardExpiryInput.addEventListener("input", function () {
-        if (!cardExpiryInput.value.match(/^\d+$/)) {
-            cardExpiryInput.value = cardExpiryInput.value.slice(0, -1);
-        }
-        const value = cardExpiryInput.value.replace(/\D/g, "").replace(/(\d{2})(\d)/, "$1/$2");
-        mcCardExpiry.textContent = value.length > 0 ? value : "**/**";
-    });
+cardExpiryMonthInput.addEventListener("input", function () {
+    if (!cardExpiryMonthInput.value.match(/^\d+$/)) {
+        cardExpiryMonthInput.value = cardExpiryMonthInput.value.slice(0, -1);
+    }
+    const value = cardExpiryMonthInput.value.replace(/\D/g, "");
+    mcCardExpiry.children[0].textContent = value.length > 0 ? value : "**";
+});
+cardExpiryYearInput.addEventListener("input", function () {
+    if (!cardExpiryYearInput.value.match(/^\d+$/)) {
+        cardExpiryYearInput.value = cardExpiryYearInput.value.slice(0, -1);
+    }
+    const value = cardExpiryYearInput.value.replace(/\D/g, "");
+    mcCardExpiry.children[2].textContent = value.length > 0 ? value : "**";
+});
 
 
     cardCVCInput.addEventListener("input", function () {
